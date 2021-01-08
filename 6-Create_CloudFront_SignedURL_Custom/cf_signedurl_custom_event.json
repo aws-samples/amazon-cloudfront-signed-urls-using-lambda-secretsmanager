@@ -1,0 +1,6 @@
+{
+  "baseUrl": "https://d1hxxxxxxxxxx.cloudfront.net/sample.html?q1=123&q2=abc",
+  "expiration": "12/07/2021 12:30:30 EST",
+  "startDateTime": "12/07/2020 05:00:05 PST",
+  "allowedIpAddress": "0.0.0.0/0"
+}
