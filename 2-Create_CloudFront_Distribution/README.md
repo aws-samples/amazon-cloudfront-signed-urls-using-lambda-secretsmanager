@@ -14,12 +14,12 @@ In this step we will create an Amazon CloudFront distribution with your Amazon S
 7. For **Grant Read Permissions on Bucket** select **Yes, Update Bucket Policy**. This will automatically add an Amazon Bucket policy to the your bucket allowing only this CloudFront distribution to read from the bucket.
 8. Leave everything else as default and select **Create Distribution**.
 9. In the distribution details screen, note the **Distribution Status**. Wait for the status to change from **In Progress** to **Deployed**. It can take upward of 5 minutes for the process to complete.
-10. Under **Domain Name** copy the FQDN, similar to `dxxxxxxxxxz.cloufront.net`.
+10. Under **Domain Name** copy the FQDN, similar to `dxxxxxxxxxz.cloudfront.net`.
 
 ### Test Public Distribution
 We want to test to verify that the distribution is setup correctly and has access to the Amazon S3 contents.
 
-Use your browser and enter the URL https://dxxxxxxxxxz.cloufront.net/sample.html. Remember to replace the domain name with your FQDN. Your sample webpage should come up correctly. However, anyone with your URL can access your Amazon S3 contents.
+Use your browser and enter the URL https://dxxxxxxxxxz.cloudfront.net/sample.html. Remember to replace the domain name with your FQDN. Your sample webpage should come up correctly. However, anyone with your URL can access your Amazon S3 contents.
 
 ### Secure Distribution
 Next we want to secure the Amazon CloudFront distribution to restrict public access.
@@ -28,7 +28,7 @@ Next we want to secure the Amazon CloudFront distribution to restrict public acc
 3. Checkbox the default **Origin or Origin Group** and select **Edit**.
 4. Under **Restrict Viewer Access (Use Signed URLs or Signed Cookies)** select **Yes** to expand the **Trusted Key Groups or Trusted Signer** option.
 5. Under **Trusted Key Groups or Trusted Sign**, select **Trusted Signer**.
-6. Under **Trusted Signers** select **Self** if you are using the same AWS Account for both the  CloudFront distribution and the CloudFront key pair, which we will create in the next step. Select **Specify Accounts** and enter the account number of another AWS Account that you will be using to create the CloudFront key pair.
+6. Under **Trusted Signers** select **Self** if you are using the same AWS Account for both the CloudFront distribution and the CloudFront key pair, which we will create in the next step. Select **Specify Accounts** and enter the account number of another AWS Account that you will be using to create the CloudFront key pair.
 7. Select **Yes, Edit** to save the changes.
 
 ### Test Secured Distribution
