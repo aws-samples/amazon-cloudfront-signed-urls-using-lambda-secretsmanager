@@ -6,7 +6,7 @@ const getKeyFromSecretsManager = () => {
   return new Promise((resolve, reject) => {
     secretsManager.getSecretValue({SecretId: process.env.awsSecretsManagerSecretName}, (err, data) => {
     if (err) {
-      console.log ("Get Sercret Error", err);
+      console.log ("Get Secret Error", err);
       return reject(err)
     }
     console.log("Secret Data", data.SecretString);
