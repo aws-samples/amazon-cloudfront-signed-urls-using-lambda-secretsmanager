@@ -9,7 +9,7 @@ const getKeyFromSecretsManager = () => {
       console.log ("Get Secret Error", err);
       return reject(err)
     }
-    console.log("Secret Data", data.SecretString);
+    console.log("Private key retrieved");
     return resolve(data.SecretString);
     });
   });
