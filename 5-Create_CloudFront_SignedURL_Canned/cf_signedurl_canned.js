@@ -39,8 +39,9 @@ exports.handler = async (event, data, callback) => {
   signer.update(cannedPolicy);
   let signedPolicy = signer.sign(await getKeyFromSecretsManager(), 'base64');
   signedPolicy = signedPolicy.replace(/[+=/]/g, m => replacementChars[m]);
-
-  const cfSignedUrl = `${event.baseUrl}&Expires=${expiration}&Signature=${signedPolicy}&Key-Pair-Id=${process.env.amazonCloudFrontKeyPairId}`;
+  
+  const paramDelimiter = (event.baseUrl.indexOf('?') === -1) ? '?' : '&';
+  const cfSignedUrl = `${event.baseUrl}${paramDelimiter}Expires=${expiration}&Signature=${signedPolicy}&Key-Pair-Id=${process.env.amazonCloudFrontKeyPairId}`;
 
   const response = {
     cfSignedUrl: cfSignedUrl

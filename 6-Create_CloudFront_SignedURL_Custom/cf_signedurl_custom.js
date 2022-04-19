@@ -47,7 +47,8 @@ exports.handler = async (event, data, callback) => {
   let signedPolicy = signer.sign(await getKeyFromSecretsManager(), 'base64');
   signedPolicy = signedPolicy.replace(/[+=/]/g, m => replacementChars[m]);
 
-  const cfSignedUrl = `${event.baseUrl}&Policy=${encodedPolicy}&Signature=${signedPolicy}&Key-Pair-Id=${process.env.amazonCloudFrontKeyPairId}`;
+  const paramDelimiter = (event.baseUrl.indexOf('?') === -1) ? '?' : '&';
+  const cfSignedUrl = `${event.baseUrl}${paramDelimiter}Policy=${encodedPolicy}&Signature=${signedPolicy}&Key-Pair-Id=${process.env.amazonCloudFrontKeyPairId}`;
 
   const response = {
     cfSignedUrl: cfSignedUrl
