@@ -65,7 +65,7 @@ Since the newly created Lambda role does **NOT** have permission to access **AWS
 6. In the browser, replace `"*"` with `"sample.html"` and hit enter. The webpage should render correctly now.
 7. Let's do another test by uploading a new file `"newsample.html"` to your Amazon S3 bucket.
 8. In the browser, replace `"sample.html"` with `"newsample.html"` and hit enter. The new webpage should render correctly as well.
-9. Try changing the date or IP address and see how it affect the access.
+9. Try changing the date or IP address and see how it affects the access.
 
 With a custom policy using a wildcard `*`, you can use the signed URL with multiple files based on matching pattern. In the example above where we used an URL `"https://d1xxxxxxxxxxxx.cloudfront.net/*"`, any of the URLs below would work:
 

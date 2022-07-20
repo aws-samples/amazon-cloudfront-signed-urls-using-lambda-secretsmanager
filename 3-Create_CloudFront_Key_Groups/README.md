@@ -7,7 +7,7 @@ In this step you will create a trusted [CloudFront key group](https://docs.aws.a
 
 
 ### Create Key Pair
-The following steps use OpenSSL as an example of one way to create a key pair. There are many other ways to create an RSA key pair.
+There are different ways to create an RSA key pair. The following steps use OpenSSL to create a key pair.
 1. The following example command uses OpenSSL to generate an RSA key pair with a length of 2048 bits and save to the file named `private_key.pem`.
 ```
 $ openssl genrsa -out private_key.pem 2048
@@ -21,12 +21,10 @@ $ openssl rsa -pubout -in private_key.pem -out public_key.pem
 1. On [Amazon CloudFront Management Console](https://console.aws.amazon.com/cloudfront)
 2. In the navigation menu, choose **Public keys**.
 3. Choose **Add public key**.
-4. In the **Add public key** window, do the following:
+4. In the **Add public key** window, complete the following and choose **Add**.
   - For **Key name**, type a name to identify the public key.
   - For **Key value**, copy and paste the contents of the public key. If you followed the steps in the preceding procedure, the public key is in the file named `public_key.pem`.
   - (Optional) For **Comment**, add a comment to describe the public key.  
-
-  When finished, choose **Add**.
 5. Record the public key ID. You will use it later section.
 
 ### Create Key group
