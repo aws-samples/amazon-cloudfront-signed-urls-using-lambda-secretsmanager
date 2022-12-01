@@ -7,12 +7,16 @@ In this step you will create an Amazon CloudFront distribution with your Amazon 
 2. Choose **Create Distribution**.
 3. Under Web, choose **Get Started**.
 4. For **Origin Domain Name** choose your Amazon S3 Bucket from Step 1.
-5. For **Restrict Bucket Access** choose **Yes**.
-6. For **Origin Access Identity** choose **Create a New Identity**.
-7. For **Grant Read Permissions on Bucket** choose **Yes, Update Bucket Policy**. This will automatically add an Amazon Bucket policy to the your bucket allowing only this CloudFront distribution to read from the bucket.
+5. For **Origin access** choose **Origin access control settings**.
+6. For **Origin access control** choose **Create control setting**.
+7. For **Signing behavior** choose **Sign requests**. Leave **Do not override authorization header** unchecked. Choose **Create** to continue.
 8. Leave everything else as default and choose **Create Distribution**.
-9. In the distribution details screen, note the **Distribution Status**. Wait for the status to change from **In Progress** to **Deployed**. It can take upward of 5 minutes for the process to complete.
-10. Under **Domain Name** copy the FQDN, similar to `dxxxxxxxxxz.cloudfront.net`.
+9. In the distribution view, choose **Origins** tab.
+10. In the **Origins** tab, select the origin you just created and choose **Edit**.
+11. In the **Edit origin** view, choose **Copy policy** to copy the S3 bucket policy to your clipboard.
+12. Add the S3 bucket policy to your S3 bucket.
+13. In the distribution details screen, note the **Distribution Status**. Wait for the status to change from **In Progress** to **Deployed**. It can take upward of 5 minutes for the process to complete.
+14. Under **Domain Name** copy the FQDN, similar to `dxxxxxxxxxz.cloudfront.net`.
 
 ### Test Public Distribution
 You want to test to verify that the distribution is setup correctly and has access to the Amazon S3 contents.
