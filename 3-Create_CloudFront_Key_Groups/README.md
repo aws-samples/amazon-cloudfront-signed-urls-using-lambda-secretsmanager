@@ -42,9 +42,8 @@ $ openssl rsa -pubout -in private_key.pem -out public_key.pem
 3. Choose the **Behaviors** tab.
 4. Select the cache behavior and then choose **Edit**.
 5. On the **Edit Behavior** page, do the following:
- - For **Trusted Key Groups or Trusted Signer**, choose **Trusted Key Groups**.
- - For **Trusted Key Groups**, choose the key group to add, and then choose **Add**.
-6. Choose **Yes, Edit** to update the cache behavior.
+ - For **Trusted authorization type**, choose **Trusted Key Groups**.
+ - For **Trusted Key Groups**, choose the key group to add, and then choose **Save changes**.
 
 In this step you generated a public-private key pair, created a CloudFront Key group with a public key, and associated the Key group to your CloudFront distribution.
 

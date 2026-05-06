@@ -9,6 +9,14 @@ In this step you will create a secret in **AWS Secrets Manager**. Up to this poi
 4. For **Select secret type**, select **Other type of secrets**.
 5. For **Specify the key/value pairs to be stored in this secret** select **Plaintext**.
 6. Copy and paste the contents of the private key in the file named **private_key.pem** from previous step.
+
+> **Important:** The private key must be stored with proper line breaks. The recommended way to do this is using the AWS CLI, which avoids copy/paste formatting issues:
+> ```bash
+> aws secretsmanager put-secret-value \
+>   --secret-id your_secret_name \
+>   --secret-string "$(cat private_key.pem)"
+> ```
+> If pasting manually in the console, switch to **Plaintext** view and ensure the key looks exactly like the original PEM file — with each line on its own line, starting with the `BEGIN RSA PRIVATE KEY` header and ending with the `END RSA PRIVATE KEY` footer. Do **not** paste it as a single line.
 7. Choose **Next**.
 8. For **Secret name**, provide a name.
 9. Choose **Next**.

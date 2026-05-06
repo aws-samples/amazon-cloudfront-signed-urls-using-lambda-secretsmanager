@@ -1,38 +1,39 @@
 ## Step 2: Create Amazon CloudFront Distribution
 
-In this step you will create an Amazon CloudFront distribution with your Amazon S3 bucket created in Step 1 as source. You will also restrict access to the bucket by using an [Origin Access Identity (OAI)](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html).
+In this step you will create an Amazon CloudFront distribution with your Amazon S3 bucket created in Step 1 as source. You will also restrict access to the bucket by using [Origin Access Control (OAC)](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html), which is the recommended replacement for the legacy Origin Access Identity (OAI).
 
 ### Create Distribution
 1. Log into your AWS account and navigate to the [Amazon CloudFront Management Console](https://console.aws.amazon.com/cloudfront).
 2. Choose **Create Distribution**.
-3. Under Web, choose **Get Started**.
-4. For **Origin Domain Name** choose your Amazon S3 Bucket from Step 1.
-5. For **Restrict Bucket Access** choose **Yes**.
-6. For **Origin Access Identity** choose **Create a New Identity**.
-7. For **Grant Read Permissions on Bucket** choose **Yes, Update Bucket Policy**. This will automatically add an Amazon Bucket policy to the your bucket allowing only this CloudFront distribution to read from the bucket.
-8. Leave everything else as default and choose **Create Distribution**.
-9. In the distribution details screen, note the **Distribution Status**. Wait for the status to change from **In Progress** to **Deployed**. It can take upward of 5 minutes for the process to complete.
-10. Under **Domain Name** copy the FQDN, similar to `dxxxxxxxxxz.cloudfront.net`.
+3. For **Choose a plan** choose **Free** and choose **Next**.
+4. For **Distribution name**, provide a name and choose **Next**.
+5. For **Origin type** choose **Amazon S3**.
+6. For **Origin** choose your Amazon S3 Bucket from Step 1 and choose **Next**.
+7. For **Enable security** choose **Next** and choose **Create Distribution**.
+
+> **Note:** CloudFront automatically creates an Origin Access Control (OAC) policy and updates your S3 bucket permissions to allow access only from this distribution. No manual bucket policy update is required.
+
+8. In the distribution details screen, note the **Last modified** status. Wait for it to show a timestamp, indicating the distribution is **Deployed**. This can take up to 5 minutes.
+9. Under **Details**, copy the **Distribution domain name**, similar to `dxxxxxxxxxz.cloudfront.net`.
 
 ### Test Public Distribution
-You want to test to verify that the distribution is setup correctly and has access to the Amazon S3 contents.
+Verify that the distribution is set up correctly and can access your Amazon S3 contents.
 
-Use your browser and enter the URL https://dxxxxxxxxxz.cloudfront.net/sample.html. Remember to replace the domain name with your FQDN. Your sample webpage should come up correctly. However, anyone with your URL can access your Amazon S3 contents.
+Use your browser and enter the URL `https://dxxxxxxxxxz.cloudfront.net/sample.html`. Remember to replace the domain name with your own. Your sample webpage should render correctly. However, anyone with your URL can access your Amazon S3 contents.
 
 ### Secure Distribution
-Next you want to secure the Amazon CloudFront distribution to restrict public access.
+Next you want to restrict the Amazon CloudFront distribution so only signed URLs are accepted.
 1. Choose the **Distribution ID** to open the detail view.
 2. Choose the **Behaviors** tab.
-3. Select the default **Origin or Origin Group** and choose **Edit**.
-4. Under **Restrict Viewer Access (Use Signed URLs or Signed Cookies)** choose **Yes** to expand the **Trusted Key Groups or Trusted Signer** option.
-5. Under **Trusted Key Groups or Trusted Signer**, select **Trusted Signer**. (Note: you will change this to **Trusted Key Groups** in later section.)
-6. Under **Trusted Signers** select **Self**.
-7. Choose **Yes, Edit** to save the changes.
+3. Select the default behavior and choose **Edit**.
+4. Under **Restrict viewer access** choose **Yes**.
+5. Under **Trusted authorization type**, select **Trusted signer** for now.
+6. You will add the key group in Step 3. For now choose **Save changes**.
 
 ### Test Secured Distribution
-Now you want to test to verify that the distribution is restricted. Refresh the webpage and you should see the error message:
+Refresh the webpage and you should see the error message:
 > Missing Key-Pair-Id query parameter or cookie value
 
-In this step you created an Amazon CloudFront distribution to distribute your Amazon S3 private contents. You then secured the distribution by using the **Restrict Viewer Access** option.  
+In this step you created an Amazon CloudFront distribution to distribute your Amazon S3 private contents. You then secured the distribution using **Restrict viewer access**.
 
-In [Step 3](../3-Create_CloudFront_Key_Groups/README.md), you will create the **CloudFront Key Groups**
+In [Step 3](../3-Create_CloudFront_Key_Groups/README.md), you will create the **CloudFront Key Groups**.

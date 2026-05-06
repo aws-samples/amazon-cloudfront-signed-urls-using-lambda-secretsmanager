@@ -4,7 +4,7 @@
         {
             "Effect": "Allow",
             "Action": "logs:CreateLogGroup",
-            "Resource": "arn:aws:logs:us-west-2:81xxxxxxxxxx:*"
+            "Resource": "arn:aws:logs:us-west-2:123456789012:*"
         },
         {
             "Effect": "Allow",
@@ -13,13 +13,13 @@
                 "logs:PutLogEvents"
             ],
             "Resource": [
-                "arn:aws:logs:us-west-2:815551942346:log-group:/aws/lambda/cfSignedURL-canned:*"
+                "arn:aws:logs:us-west-2:123456789012:log-group:/aws/lambda/cfSignedURL-canned:*"
             ]
         },
         {
             "Effect": "Allow",
             "Action": "secretsmanager:GetSecretValue",
-            "Resource": "arn:aws:secretsmanager:us-west-2:8xxxxxxxxxx6:secret:your_secret_name"
+            "Resource": "arn:aws:secretsmanager:us-west-2:123456789012:secret:your_secret_name"
         }
     ]
 }

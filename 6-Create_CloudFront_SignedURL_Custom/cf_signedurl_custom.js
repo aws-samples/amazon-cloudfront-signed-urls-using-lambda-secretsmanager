@@ -1,57 +1,58 @@
-const AWS = require('aws-sdk');
-const secretsManager = new AWS.SecretsManager({region: process.env.awsRegion});
-const crypto = require('crypto');
-const replacementChars = {'+':'-', '=':'_', '/':'~'}
-const getKeyFromSecretsManager = () => {
-  return new Promise((resolve, reject) => {
-    secretsManager.getSecretValue({SecretId: process.env.awsSecretsManagerSecretName}, (err, data) => {
-    if (err) {
-      console.log ("Get Secret Error", err);
-      return reject(err)
-    }
-    console.log("Private key retrieved");
-    return resolve(data.SecretString);
-    });
-  });
-}
+import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
+import { createSign } from 'crypto';
 
-exports.handler = async (event, data, callback) => {
+const secretsManager = new SecretsManagerClient({ region: process.env.AWS_REGION });
 
-  let expiration = new Date(event.expiration)/1000|0;
-  let startDateTime = new Date(event.startDateTime)/1000|0;
-  let customPolicy = {
-    "Statement":[
+// CloudFront requires base64 with these character substitutions
+const toCloudFrontBase64 = (str) => str.replace(/\+/g, '-').replace(/=/g, '_').replace(/\//g, '~');
+
+const getKeyFromSecretsManager = async () => {
+  const response = await secretsManager.send(
+    new GetSecretValueCommand({ SecretId: process.env.awsSecretsManagerSecretName })
+  );
+  console.log('Private key retrieved');
+  return response.SecretString;
+};
+
+const toEpoch = (dateStr) => {
+  const ts = new Date(dateStr).getTime();
+  if (isNaN(ts)) throw new Error(`Invalid date: "${dateStr}". Use ISO 8601 format, e.g. "2027-12-31T12:30:30Z"`);
+  return Math.floor(ts / 1000);
+};
+
+export const handler = async (event) => {
+  const privateKey = await getKeyFromSecretsManager();
+
+  const expiration = toEpoch(event.expiration);
+  const startDateTime = toEpoch(event.startDateTime);
+
+  const customPolicy = JSON.stringify({
+    Statement: [
       {
-        "Resource": event.baseUrl,
-        "Condition":{
-          "IpAddress": {
-            "AWS:SourceIp": event.allowedIpAddress
+        Resource: event.baseUrl,
+        Condition: {
+          IpAddress: {
+            'AWS:SourceIp': event.allowedIpAddress,
           },
-          "DateLessThan":{
-            "AWS:EpochTime": expiration
+          DateLessThan: {
+            'AWS:EpochTime': expiration,
           },
-          "DateGreaterThan": {
-            "AWS:EpochTime": startDateTime
-          }
-        }
-      }
-    ]
-  };
-  customPolicy = JSON.stringify(customPolicy);
+          DateGreaterThan: {
+            'AWS:EpochTime': startDateTime,
+          },
+        },
+      },
+    ],
+  });
 
-  let encodedPolicy = new Buffer.from(customPolicy).toString("base64");
-  encodedPolicy = encodedPolicy.replace(/[+=/]/g, m => replacementChars[m]);
+  const encodedPolicy = toCloudFrontBase64(Buffer.from(customPolicy).toString('base64'));
 
-  const signer = crypto.createSign('RSA-SHA1');
+  const signer = createSign('RSA-SHA1');
   signer.update(customPolicy);
-  let signedPolicy = signer.sign(await getKeyFromSecretsManager(), 'base64');
-  signedPolicy = signedPolicy.replace(/[+=/]/g, m => replacementChars[m]);
+  const signature = toCloudFrontBase64(signer.sign(privateKey, 'base64'));
 
-  const paramDelimiter = (event.baseUrl.indexOf('?') === -1) ? '?' : '&';
-  const cfSignedUrl = `${event.baseUrl}${paramDelimiter}Policy=${encodedPolicy}&Signature=${signedPolicy}&Key-Pair-Id=${process.env.amazonCloudFrontKeyPairId}`;
+  const paramDelimiter = event.baseUrl.includes('?') ? '&' : '?';
+  const cfSignedUrl = `${event.baseUrl}${paramDelimiter}Policy=${encodedPolicy}&Signature=${signature}&Key-Pair-Id=${process.env.amazonCloudFrontKeyPairId}`;
 
-  const response = {
-    cfSignedUrl: cfSignedUrl
-  };
-  callback(null,response);
-}
+  return { cfSignedUrl };
+};
